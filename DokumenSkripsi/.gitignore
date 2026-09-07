@@ -3,6 +3,9 @@
 *.blg
 *.dvi
 *.log
+*.ilg
+*.nlo
+*.nls
 /*.lof
 /*.lot
 /*.out
