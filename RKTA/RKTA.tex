@@ -1,0 +1,296 @@
+\documentclass[a4paper,twoside]{article}
+
+% Pengaturan Paket & Tata Letak
+\usepackage[T1]{fontenc}
+\usepackage[indonesian]{babel} % Bahasa Indonesia untuk hyphenation & istilah standar
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{float}
+\usepackage[cm]{fullpage}
+\usepackage{etoolbox}
+\usepackage{setspace} 
+\usepackage{lipsum} 
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[inner=2cm, outer=2.5cm, top=2.5cm, bottom=2cm]{geometry} % Margin halaman
+
+% Path untuk file yang mau dipanggil (gambar, tabel, dll.)
+\graphicspath{{../assets/}}
+
+\pagestyle{myheadings}
+\setlength{\headsep}{30pt}
+
+% Format Judul dan Header Otomatis
+\makeatletter
+\renewcommand{\@maketitle}{
+  \begin{center} 
+    {\Large \textbf{\textsc{\@title}} \par} 
+    \bigskip 
+    {\large \textbf{\textsc{\@author}}}
+  \end{center} 
+}
+\renewcommand{\thispagestyle}[1]{}
+
+% Header Halaman Atas
+\markright{\textbf{\textsc{AIF234001-03/AIF234002-06}}\ \textemdash\ \textbf{\textsc{Rencana Kerja Tugas Akhir}}\ \textemdash\ \textbf{\textsc{Sem. Ganjil 2026/2027}}}
+\makeatother
+
+% Pengaturan Paragraf & Spasi
+\newcommand{\HRule}{\rule{\linewidth}{0.4mm}}
+\setlength{\parindent}{0pt} % Tidak ada inden paragraf
+\setlength{\parskip}{6pt}   % Jarak antar paragraf
+\onehalfspacing             % Spasi 1.5
+
+% METADATA
+\newcommand{\nama}{Joseph Davin Christian}             % Nama Mahasiswa
+\newcommand{\npm}{6182301015}                          % NPM Mahasiswa
+\newcommand{\judultopik}{Analisis Big Data Satelit Irradiansi Matahari dan Tutupan Awan
+untuk Rekomendasi Penempatan PLTS Terapung di Waduk-waduk Jawa Barat} % Judul / Topik Tugas Akhir
+\newcommand{\jumpemb}{1}                               % Jumlah Pembimbing (Isi 1 atau 2)
+\newcommand{\tanggal}{17/08/2026}                      % Tanggal Pengajuan
+
+% Set Metadata ke LaTeX Title System
+\title{\judultopik}
+\author{\nama\ \textendash\ \npm}
+
+
+% ISI DOKUMEN (DOCUMENT BODY)
+\begin{document}
+
+% Cetak Judul Utama (Title & Author)
+\maketitle
+\thispagestyle{myheadings} 
+\pagenumbering{arabic}
+
+% Catatan Percetakan (Bisa dihapus jika tidak diperlukan):
+% Dokumen hasil template ini harus dicetak bolak-balik!
+
+% DESKRIPSI TOPIK
+\section{Deskripsi}
+Kebutuhan energi baru terbarukan (EBT) di Indonesia terus meningkat, termasuk energi
+surya, seiring komitmen pemerintah mencapai bauran EBT sebesar 15,75\% pada tahun
+2025 \footnote{Kementerian ESDM RI, \textit{Bauran Energi Baru Terbarukan RI di 2025
+Tercatat Capai 15,75\%},
+\url{https://www.cnbcindonesia.com/news/20260109093024-4-700934/bauran-energi-baru-terbarukan-ri-di-2025-tercatat-capai-1575}} dan \textit{net zero emission}
+pada tahun 2060.\footnote{Kementerian ESDM RI, \textit{Ini Prinsip dan Peta Jalan
+Pemerintah Capai Net Zero Emission} (2023),
+\url{https://esdm.go.id/id/media-center/arsip-berita/ini-prinsip-dan-peta-jalan-pemerintah-capai-net-zero-emission}} 
+Pembangkit Listrik Tenaga Surya (PLTS) telah banyak dibangun dan
+dimanfaatkan, namun pengembangan secara masif menghadapi tantangan utama:
+ketersediaan lahan darat yang luas dengan sinar matahari yang konsisten.
+
+PLTS Terapung menjadi salah satu solusi dari tantangan tersebut. Pada PLTS Terapung,
+panel surya dipasang mengapung di atas permukaan air yang tenang seperti di genangan 
+waduk atau danau menggunakan struktur pelampung (\textit{floater}). Jawa Barat
+memiliki sekitar 13 waduk utama yang tersebar di berbagai kabupaten. Sebagian sudah
+dimanfaatkan untuk PLTS Terapung, misalnya PLTS Terapung Cirata dengan kapasitas
+terpasang 192 MWp, dan potensi pembangunan di waduk-waduk lainnya masih terbuka.
+ 
+Akan tetapi permasalahannya muncul di wilayah lokasi waduk tersebut berada, Provinsi
+Jawa Barat memiliki intensitas curah hujan dan tutupan awan yang tinggi sehingga
+mempengaruhi efisiensi energi yang dihasilkan panel surya. Selain itu, belum
+tersedia model pemilihan lokasi waduk khususnya untuk Jawa Barat yang memadukan
+data historis paparan matahari (irradiansi) dengan analisis luas genangan air
+menggunakan data satelit.
+ 
+Penentuan lokasi yang optimal secara teknis dan ekonomis, membutuhkan
+analisis multivariabel seperti: luas dan stabilitas genangan air,
+rata-rata irradiansi matahari global (\textit{Global Horizontal
+Irradiation}, GHI) historis, indeks tutupan awan, dan kedekatan dengan
+jaringan listrik. Data-data tersebut tersedia dalam cakupan spasial dan
+temporal yang luas melalui berbagai platform penginderaan jauh, namun
+volumenya sangat besar sehingga dikategorikan sebagai \textit{big data}
+satelit.
+ 
+Maka dari itu, Tugas Akhir ini, akan diterapkan tahapan \textit{data science}
+dengan memanfaatkan data satelit yang bersumber dari citra SAR Sentinel-1
+untuk deteksi permukaan air, dataset GHI SARAH-3/CAMS dan ERA5 untuk
+irradiansi matahari, serta MODIS untuk indeks tutupan awan, dengan
+rentang waktu historis 5--10 tahun. Seluruh proses analisis dilakukan
+pada platform Google Earth Engine (GEE), dikombinasikan dengan algoritma
+\textit{machine learning} berbasis Python untuk pemodelan prediktif
+potensi energi. Hasil akhir penelitian berupa perangkat lunak rekomendasi
+berbasis peta interaktif yang membantu pengambil keputusan menentukan
+prioritas pengembangan PLTS terapung di waduk-waduk Jawa Barat.
+
+% RUMUSAN MASALAH
+\section{Rumusan Masalah}
+Rumusan masalah dari deskripsi yang telah dipaparkan adalah sebagai berikut:
+\begin{enumerate}
+	\item Bagaimana cara mengidentifikasi dan menghitung luas permukaan air di waduk-waduk Jawa Barat
+	      menggunakan data satelit?
+	\item Bagaimana cara menghitung rata-rata bulanan dan tahunan dari \textit{Global Horizontal Irradiation}
+	      (GHI), indeks tutupan awan, dan potensi energi listrik tenaga surya di lokasi waduk-waduk besar
+	      selama 5 - 10 tahun terakhir?
+	\item Bagaimana cara memberikan rekomendasi waduk dan/atau lokasi di atas air yang sesuai untuk
+	      penempatan PLTS Terapung?
+	\item Bagaimana membangun perangkat lunak berbasis peta interaktif untuk menampilkan hasil analisis dan
+	      rekomendasi lokasi PLTS Terapung?
+\end{enumerate}
+
+
+% TUJUAN
+\section{Tujuan}
+Tujuan penelitian dari rumusan masalah yang telah dipaparkan sebelumnya adalah sebagai berikut:
+\begin{enumerate}
+	\item Mengidentifikasi luas permukaan air di danau-danau Jabar menggunakan data satelit
+	      untuk memperkirakan kapasitas daya maksimum (Megawatt) yang dapat dipasang tanpa mengganggu
+	      fungsi utama waduk.
+	\item Menghitung rata-rata bulanan dan tahunan dari \textit{Global Horizontal Irradiation} (GHI),
+	      indeks tutupan awan, dan potensi energi listrik tenaga surya di lokasi waduk-waduk besar selama 5--10
+	      tahun terakhir.
+	\item Memberikan rekomendasi waduk dan/atau lokasi di atas air yang sesuai untuk penempatan PLTS
+	      Terapung beserta informasi pendukung yang dibutuhkan.
+	\item Membangun perangkat lunak berbasis peta interaktif untuk menampilkan hasil analisis dan
+	      rekomendasi lokasi PLTS Terapung.
+\end{enumerate}
+
+% DESKRIPSI PERANGKAT LUNAK
+\section{Deskripsi Perangkat Lunak}
+Program akhir yang akan dibuat memiliki fitur minimal sebagai berikut:
+\begin{itemize}
+	\item Program dapat menampilkan hasil analisis data satelit terkait luas permukaan air dan potensi
+	      energi surya di waduk-waduk Jawa Barat.
+	\item Program dapat menampilkan rekomendasi lokasi PLTS Terapung beserta informasi pendukungnya.
+	\item Program memiliki antarmuka berbasis peta interaktif yang memudahkan pengguna dalam
+	      menginterpretasikan hasil analisis.
+\end{itemize}
+
+
+% DETAIL PENGERJAAN TUGAS AKHIR
+\section{Detail Pengerjaan Tugas Akhir}
+Bagian-bagian pekerjaan skripsi ini adalah sebagai berikut:
+\begin{enumerate}
+	\item Melakukan studi literatur tentang kebutuhan energi listrik di Jawa Barat.
+	\item Melakukan studi literatur tentang PLTS secara umum, PLTS
+	      Terapung, dan konsep dasar yang relevan.
+	\item Melakukan studi literatur tentang data satelit untuk mendeteksi permukaan air
+	      (Contoh: Sentinel-1).
+	\item Melakukan studi literatur tentang data satelit yang dapat
+	      dimanfaatkan untuk menghitung potensi energi listrik PLTS beserta
+	      berbagai kendalanya (awan, hujan, dll.).
+	\item Melakukan studi literatur tentang statistika dan algoritma
+	      \textit{Machine Learning} yang relevan.
+	\item Melakukan studi eksplorasi terhadap berbagai teknologi (seperti
+	      Google Earth Engine/GEE), \textit{library}, dan \textit{framework}
+	      yang dibutuhkan.
+	\item Melakukan survei lapangan ke danau studi kasus untuk mendapatkan
+	      data \textit{ground truth}.
+	\item Mengumpulkan data satelit (untuk mendeteksi air, awan, dan sinar
+	      matahari) yang melingkup danau-danau studi kasus selama beberapa
+	      tahun.
+	\item Mengumpulkan data cuaca/lingkungan pada rentang waktu yang sesuai
+	      dengan rentang waktu pengumpulan data satelit.
+	\item Menerapkan teknik penyiapan data (\textit{feature engineering})
+	      pada data yang sudah dikumpulkan.
+	\item Melakukan analisis data satelit untuk mendeteksi area permukaan
+	      air dan menghitung luas genangan waduk.
+	\item Melakukan analisis cuaca dan tutupan awan pada data \textit{time series}
+	      untuk perhitungan potensi energi listrik PLTS.
+	\item Melakukan pengujian dan evaluasi terhadap hasil analisis yang telah
+	      dilakukan.
+	\item Memanfaatkan model yang telah dibuat untuk memprediksi luas area
+	      waduk dan menghitung potensi energi surya dengan memperhitungkan
+	      tutupan awan dan cuaca.
+	\item Menentukan lokasi-lokasi rekomendasi PLTS Terapung beserta
+	      informasi yang dibutuhkan.
+	\item Membangun perangkat lunak berbasis peta interaktif untuk
+	      menampilkan hasil-hasil analisis dengan tampilan yang menarik dan
+	      mudah diinterpretasikan.
+	\item Menulis dan menyelesaikan dokumen Tugas Akhir.
+\end{enumerate}
+
+
+% RENCANA KERJA (MILESTONES)
+\section{Rencana Kerja}
+Rincian capaian yang direncanakan di \textbf{Tugas Akhir 1} adalah sebagai berikut:
+\begin{enumerate}
+	\item Melakukan studi literatur tentang kebutuhan energi listrik di Jawa Barat.
+	\item Melakukan studi literatur tentang PLTS secara umum, PLTS
+	      Terapung, dan konsep dasar yang relevan.
+	\item Melakukan studi literatur tentang data satelit untuk mendeteksi permukaan air
+	      (Contoh: Sentinel-1).
+	\item Melakukan studi literatur tentang data satelit yang dapat
+	      dimanfaatkan untuk menghitung potensi energi listrik PLTS beserta
+	      berbagai kendalanya (awan, hujan, dll.).
+	\item Melakukan studi literatur tentang statistika dan algoritma
+	      \textit{Machine Learning} yang relevan.
+	\item Melakukan studi eksplorasi terhadap berbagai teknologi (seperti
+	      Google Earth Engine/GEE), \textit{library}, dan \textit{framework}
+	      yang dibutuhkan.
+	\item Melakukan observasi lapangan (\textit{ground-checking}) kualitatif ke waduk studi kasus
+	      \footnote{Observasi lapangan sudah dilakukan namun hanya dengan pengamatan visual kondisi
+		      fisik dan lingkungan sekitar waduk, tanpa pengukuran parameter fisik secara langsung
+		      karena keterbatasan perizinan dan peralatan.}
+	\item Mengumpulkan data satelit (untuk mendeteksi air, awan, dan sinar
+	      matahari) yang melingkup danau-danau studi kasus selama beberapa
+	      tahun.
+	\item Mengumpulkan data cuaca/lingkungan pada rentang waktu yang sesuai
+	      dengan rentang waktu pengumpulan data satelit.
+	\item Menerapkan teknik penyiapan data (\textit{feature engineering})
+	      pada data yang sudah dikumpulkan.
+	\item Melakukan analisis data satelit untuk mendeteksi area permukaan
+	      air dan menghitung luas genangan waduk.
+	\item Melakukan analisis cuaca dan tutupan awan pada data \textit{time series}
+	      untuk perhitungan potensi energi listrik PLTS. (Tahap Awal)
+	\item Menulis draft dokumen Tugas Akhir.
+\end{enumerate}
+
+Sedangkan yang akan diselesaikan di \textbf{Tugas Akhir 2} adalah sebagai berikut:
+\begin{enumerate}
+	\item Melakukan analisis cuaca dan tutupan awan pada data \textit{time series}
+	      untuk perhitungan potensi energi listrik PLTS. (Lanjutan)
+	\item Melakukan pengujian dan evaluasi terhadap hasil analisis yang telah
+	      dilakukan.
+	\item Memanfaatkan model yang telah dibuat untuk memprediksi luas area
+	      waduk dan menghitung potensi energi surya dengan memperhitungkan
+	      tutupan awan dan cuaca.
+	\item Menentukan lokasi-lokasi rekomendasi PLTS Terapung beserta
+	      informasi yang dibutuhkan.
+	\item Membangun perangkat lunak berbasis peta interaktif untuk
+	      menampilkan hasil-hasil analisis dengan tampilan yang menarik dan
+	      mudah diinterpretasikan.
+	\item Menyelesaikan dokumen Tugas Akhir.
+\end{enumerate}
+\vspace{1cm}
+
+% LEMBAR PENGESAHAN & TANDA TANGAN
+\clearpage
+
+\begin{center}
+	Bandung, \tanggal \\
+	\vspace{0.5cm}
+
+    % Masukin TTD di sini
+	\includegraphics[width=4cm, height=2cm, keepaspectratio]{TandaTanganDavin.jpg}
+
+	\textbf{\nama} \\
+	\vspace{1cm}
+
+	Menyetujui, \\
+
+	\ifdefstring{\jumpemb}{2}{
+		% Jika jumlah pembimbing = 2
+		\vspace{1cm}
+		\begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\vspace{2cm}
+			Nama: \makebox[3.5cm]{\hrulefill} \\
+			\textbf{Pembimbing Utama}
+		\end{minipage}
+		\hspace{0.5cm}
+		\begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\vspace{2cm}
+			Nama: \makebox[3.5cm]{\hrulefill} \\
+			\textbf{Pembimbing Pendamping}
+		\end{minipage}
+	}{
+		% Jika jumlah pembimbing = 1 (Tunggal)
+		\vspace{2cm}
+		Nama: Prof. Dr. Ir. Veronica Sri Moertini, M.T. \\
+		Pembimbing Tunggal
+	}
+\end{center}
+
+\end{document}
